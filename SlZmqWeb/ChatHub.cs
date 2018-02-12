@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 
 namespace SilverlightChatHub
 {
@@ -7,6 +8,11 @@ namespace SilverlightChatHub
         public void Send(string name, string message)
         {
             Clients.All.broadcastMessage(name, message);
+        }
+
+        public override Task OnConnected()
+        {
+            return 0;
         }
     }
 }
