@@ -8,9 +8,10 @@ https://www.codeproject.com/Tips/787033/SignalR-in-Silverlight
 - After building, copy SlZmqWeb\bin\i386 to SlZmqWeb, otherwise the web
   app can't find libzmq.dll. Meh.
 - Run the web app, wait for a bit (for signalR to get off its butt)
-- Run ZmqConsoleClient. It sends messages to the web server via ZMQ,
-  and gets a response!
+- Run ZmqConsoleClient. It sends messages to the silverlight app via
+  ZeroMQ and signalR, and prints the response
 
 # Todo
 
-- Route ZMQ messages to the silverlight app, and respond from there
+- Replace synchronous request/response with dual 1-way message queues.
+  Clients will deal with synchronisation.

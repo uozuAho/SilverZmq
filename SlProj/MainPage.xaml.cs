@@ -25,7 +25,14 @@ namespace SilverlightSignalR
             {
                 Dispatcher.BeginInvoke(() => textBox.Text = name + ": " + message);
             });
+            _hub.On<string>("consoleBroadcast",
+                msg => { _hub.Invoke("SendToConsole", ProcessMessageFromConsole(msg)); });
             _connection.Start();
+        }
+
+        private static string ProcessMessageFromConsole(string msg)
+        {
+            return "from silverlight. I heard: " + msg;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
