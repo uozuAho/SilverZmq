@@ -5,7 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlZmqWeb", "SlZmqWeb\SlZmqWeb.csproj", "{77C2C69C-FE29-4141-829C-255250DE7418}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilverlightSignalR", "SlProj\SlProj.csproj", "{46561F46-99E3-4D26-B701-F114CF42D924}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlProj", "SlProj\SlProj.csproj", "{46561F46-99E3-4D26-B701-F114CF42D924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZmqConsoleClient", "ZmqConsoleClient\ZmqConsoleClient.csproj", "{A8B30FAD-5811-43F1-B402-B29BBAA04112}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{46561F46-99E3-4D26-B701-F114CF42D924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46561F46-99E3-4D26-B701-F114CF42D924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46561F46-99E3-4D26-B701-F114CF42D924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B30FAD-5811-43F1-B402-B29BBAA04112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B30FAD-5811-43F1-B402-B29BBAA04112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B30FAD-5811-43F1-B402-B29BBAA04112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B30FAD-5811-43F1-B402-B29BBAA04112}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
