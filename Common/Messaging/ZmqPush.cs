@@ -3,32 +3,25 @@ using ZeroMQ;
 
 namespace Common.Messaging
 {
-    internal sealed class ZmqPush : IMessageQueue
+    internal sealed class ZmqPush : ZmqBase
     {
-        private readonly ZContext _zContext;
-        private readonly ZSocket _zSocket;
-
-        public ZmqPush(string endpoint)
+        public ZmqPush(string endpoint) : base(endpoint)
         {
-            _zContext = new ZContext();
-            _zSocket = new ZSocket(_zContext, ZSocketType.PUSH);
-            _zSocket.Connect(endpoint);
         }
 
-        public string Read()
+        public override string Read()
         {
             throw new InvalidOperationException("This queue is write-only");
         }
 
-        public void Write(string message)
+        protected override ZSocket CreateSocket(ZContext context)
         {
-            _zSocket.Send(new ZFrame(message));
+            return new ZSocket(context, ZSocketType.PUSH);
         }
 
-        public void Dispose()
+        protected override void ConnectSocket(ZSocket socket)
         {
-            _zContext?.Dispose();
-            _zSocket?.Dispose();
+            socket.Connect(_endpoint);
         }
     }
 }

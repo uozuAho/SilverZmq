@@ -14,5 +14,16 @@ namespace Common.Messaging
         /// Write a message to the queue.
         /// </summary>
         void Write(string message);
+
+        /// <summary>
+        /// Open the connection. This may entail 'binding' (waiting
+        /// for a connection) or actually connecting to a bound port.
+        /// </summary>
+        void Connect();
+
+        /// <summary>
+        /// Is connected and can send/receive messages
+        /// </summary>
+        bool IsConnected { get; }
     }
 }

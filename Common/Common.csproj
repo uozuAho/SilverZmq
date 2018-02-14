@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Messaging\IMessageQueue.cs" />
     <Compile Include="Messaging\MessageQueueFactory.cs" />
+    <Compile Include="Messaging\ZmqBase.cs" />
     <Compile Include="Messaging\ZmqPull.cs" />
     <Compile Include="Messaging\ZmqPush.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

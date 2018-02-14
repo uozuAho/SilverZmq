@@ -5,6 +5,16 @@ namespace SilverlightChatHub.Messaging
 {
     public class ChatHub : Hub
     {
+        /// <summary>
+        /// This hub receives commands on port 5555
+        /// </summary>
+        public const int RecvPort = 5555;
+
+        /// <summary>
+        /// This hub sends messages to command clients on port 5556
+        /// </summary>
+        public const int SendPort = 5556;
+
         private static CommandServer _commandServer;
 
         public void Send(string name, string message)
@@ -26,7 +36,7 @@ namespace SilverlightChatHub.Messaging
             return Task.FromResult(0);
         }
 
-        private void ProcessConsoleRequest(string message)
+        private void ProcessCommand(string message)
         {
             Clients.All.consoleBroadcast(message);
         }
@@ -40,7 +50,7 @@ namespace SilverlightChatHub.Messaging
         private CommandServer CreateCommandServer()
         {
             var server = new CommandServer("tcp://127.0.0.1:5556", "tcp://127.0.0.1:5555");
-            server.SetCommandReceivedHandler(ProcessConsoleRequest);
+            server.SetCommandReceivedHandler(ProcessCommand);
             return server;
         }
     }

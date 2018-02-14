@@ -10,24 +10,37 @@ namespace SilverlightChatHub.Messaging
     /// </summary>
     internal sealed class CommandServer
     {
-        private readonly IMessageQueue _pushQueue;
-        private readonly IMessageQueue _pullQueue;
+        // outbox to command client
+        private readonly IMessageQueue _sendQueue;
+        // inbox from command client
+        private readonly IMessageQueue _recvQueue;
 
         private readonly Thread _listenerThread;
 
         private Action<string> _onCommandReceived;
 
-        public CommandServer(string pushEndpoint, string pullEndpoint)
+        /// <summary>
+        /// Create a command server
+        /// </summary>
+        /// <param name="sendEndpoint">Endpoint that the server sends messages to</param>
+        /// <param name="recvEndpoint">Endpoint that the server receives commands on</param>
+        public CommandServer(string sendEndpoint, string recvEndpoint)
         {
             var messageQueueFactory = new MessageQueueFactory();
 
-            _pushQueue = messageQueueFactory.GetWriteOnlyQueue(pushEndpoint);
-            _pullQueue = messageQueueFactory.GetReadOnlyQueue(pullEndpoint);
+            _sendQueue = messageQueueFactory.GetWriteOnlyQueue(sendEndpoint);
+            _recvQueue = messageQueueFactory.GetReadOnlyQueue(recvEndpoint);
+            // receive queue can connect straight away since it waits for incoming
+            // connections
+            _recvQueue.Connect();
             _listenerThread = new Thread(ListenerLoop);
             _listenerThread.Start();
         }
 
         // I should learn how to use events...
+        /// <summary>
+        /// Set handler for when messages are received from a command client
+        /// </summary>
         public void SetCommandReceivedHandler(Action<string> handler)
         {
             _onCommandReceived = handler;
@@ -35,7 +48,12 @@ namespace SilverlightChatHub.Messaging
 
         public void SendMessage(string message)
         {
-            _pushQueue.Write(message);
+            // Connecting to the command client is delayed until a 
+            // message is received from the client, otherwise connection
+            // fails and we send messages into the ether
+            if (!_sendQueue.IsConnected)
+                _sendQueue.Connect();
+            _sendQueue.Write(message);
         }
 
         private void ListenerLoop()
@@ -44,7 +62,7 @@ namespace SilverlightChatHub.Messaging
             {
                 while (true)
                 {
-                    var message = _pullQueue.Read();
+                    var message = _recvQueue.Read();
                     _onCommandReceived?.Invoke(message);
                     // is this needed to be able to be interrupted?
                     Thread.Sleep(1);
@@ -55,8 +73,8 @@ namespace SilverlightChatHub.Messaging
 
         public void Dispose()
         {
-            _pushQueue?.Dispose();
-            _pullQueue?.Dispose();
+            _sendQueue?.Dispose();
+            _recvQueue?.Dispose();
             _listenerThread.Interrupt();
         }
     }
