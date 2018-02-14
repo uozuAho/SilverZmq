@@ -12,7 +12,7 @@ namespace Common.Messaging
         {
             _zContext = new ZContext();
             _zSocket = new ZSocket(_zContext, ZSocketType.PUSH);
-            _zSocket.Bind(endpoint);
+            _zSocket.Connect(endpoint);
         }
 
         public string Read()

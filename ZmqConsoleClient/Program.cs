@@ -1,29 +1,60 @@
 ﻿using System;
-using ZeroMQ;
+using Common.Messaging;
 
 namespace ZmqConsoleClient
 {
     internal class Program
     {
+        public const int Port1 = 5555;
+        public const int Port2 = 5556;
+
         public static void Main(string[] args)
         {
-            using (var context = new ZContext())
-            using (var requester = new ZSocket(context, ZSocketType.REQ))
+            var swap = args.Length == 1 && args[0] == "swap";
+            var pushPort = swap ? Port1 : Port2;
+            var pullPort = swap ? Port2 : Port1;
+
+            var closeRequested = false;
+            var queueFactory = new MessageQueueFactory();
+            Console.CancelKeyPress += (e, a) =>
             {
-                requester.Connect("tcp://127.0.0.1:5555");
+                closeRequested = true;
+            };
 
-                for (var n = 0; n < 10; ++n)
+            Console.WriteLine("creating push channel...");
+            var pushQueue = queueFactory.GetWriteOnlyQueue("tcp://127.0.0.1:" + pushPort);
+
+            try
+            {
+                Console.WriteLine("creating pull channel...");
+                var pullQueue = queueFactory.GetReadOnlyQueue("tcp://127.0.0.1:" + pullPort);
+                try
                 {
-                    const string requestText = "Hello";
-                    Console.Write("Sending {0}…", requestText);
-
-                    requester.Send(new ZFrame(requestText));
-
-                    using (var reply = requester.ReceiveFrame())
+                    while (!closeRequested)
                     {
-                        Console.WriteLine(" Received: {0} {1}!", requestText, reply.ReadString());
+                        Console.WriteLine("enter a message");
+                        var input = Console.ReadLine();
+                        pushQueue.Write(input);
+                        var response = pullQueue.Read();
+                        Console.WriteLine("response: " + response);
+//                        while (true)
+//                        {
+//                            Console.WriteLine("response: " + response);
+//                            if (response == "END")
+//                                break;
+//                        }
                     }
+
+                    Console.WriteLine("Shutting down...");
                 }
+                finally
+                {
+                    pullQueue?.Dispose();
+                }
+            }
+            finally
+            {
+                pushQueue?.Dispose();
             }
         }
     }
