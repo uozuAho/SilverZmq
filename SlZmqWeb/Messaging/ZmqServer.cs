@@ -2,7 +2,7 @@
 using System.Threading;
 using ZeroMQ;
 
-namespace SilverlightChatHub
+namespace SilverlightChatHub.Messaging
 {
     /// <summary>
     /// Simple request/response server

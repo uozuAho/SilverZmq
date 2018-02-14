@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 
-namespace SilverlightChatHub
+namespace SilverlightChatHub.Messaging
 {
     public class ChatHub : Hub
     {
